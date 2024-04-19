@@ -1,4 +1,3 @@
-import re
 
 class Alphabet:
     def __init__(self, word):
@@ -14,11 +13,11 @@ class State:
         
 class Transition:
     def __init__(self, state1, state2, word):
-        self.from_state = state1
-        self.to_state = state2
+        self.state1 = state1
+        self.state2 = state2
         self.word = word
     def __repr__(self): 
-        return f"Transition({self.from_state}->{self.word}->{self.to_state})"
+        return f"Transition(\n   state={self.state1},\n   to state={self.state2})"
 
         
 
@@ -39,32 +38,7 @@ class FiniteAutomate:
             if state.name == state_name:
                 return state
         return None
-    
-    def get_word_from(self, word_name):
-        for word in self.words:
-            if word.word == word_name:
-                return word
-        return None
-    
-    def is_standard(self) -> bool:
-        if len(self.initial_states) == 1:
-            # Check if no transition is going to initial state
-            initial_state = self.initial_states[0]
-            status = True
-            for transition in self.transitions:
-                if transition.to_state is initial_state : # Warning use is function to compare same object in memory
-                    return False
-            return True
-        else:
-            return False
-        
-    # TODO : à implémenter
-    def is_deterministic(self) -> bool:
-        return True
 
-    # TODO : à implémenter
-    def is_complete(self) -> bool:
-        return True
     
     def add_word(self, word):
         self.words.append(word)
@@ -90,44 +64,20 @@ class FiniteAutomate:
             initial_states = set(initial_states_info[1:num_initial_states + 1])
             for state_name in initial_states :
                 self.initial_states.append(self.get_state_from(state_name))    
-            #print(initial_states)
+            print(initial_states)
+                
             
-            # Read final states
-            final_states_info = file.readline().strip().split()
-            num_final_states = int(final_states_info[0])
-            final_states = set(final_states_info[1:num_final_states + 1])
-            for state_name in final_states :
-                self.final_states.append(self.get_state_from(state_name))    
-            #print(final_states)
-
-            # Read transitions
-            num_transitions = int(file.readline().strip())
-            #print(num_transitions)
-            
-            for _ in range(num_transitions):
-                text = file.readline().strip()
-                parts = re.split(r'(\d+)([a-zA-Z])(\d+)', text) # use regex to separate items
-                # Remove any empty strings from the list which can occur due to how re.split() includes results
-                parts = [part for part in parts if part]
-                source_state = parts[0]
-                word = parts[1]
-                ending_state = parts[2]
-                self.transitions.append(Transition(self.get_state_from(source_state),self.get_state_from(ending_state),self.get_word_from(word)))
-                #print(f"Transistion {source_state}-{word}-{ending_state}")
-            
+       
     
     def __repr__(self):
-        return f"FA(\n   name={self.name},\n   words={self.words},\n   states={self.states},\n   initial_states={self.initial_states}),\n   final_states={self.final_states}),\n   transition={self.transitions})"
+        return f"FA(\n   name={self.name},\n   words={self.words},\n   states={self.states},\n   initial_states={self.initial_states})"
 
 
 def display_finite_automate(fa):
     print("Finite Automate name:", fa.name)
     print("Alphabet:", fa.words)
     print("States:", fa.states)
-    print("Initial states:", fa.initial_states)
-    print("Final states:", fa.final_states)
-    print("Transitions:", fa.transitions)
-        
+    
 
 
 def display_finite_automate_amandine(fa):
@@ -136,13 +86,8 @@ def display_finite_automate_amandine(fa):
     print("States:", fa.states)
 
 
-def completion(FA):
-    return
-
 
 fa = FiniteAutomate("Test")
-#fa.read_from_file("Inputs/Int3-2-20.txt")
-fa.read_from_file("Inputs/Int3-2-4.txt")
+fa.read_from_file("Inputs/Int3-2-3.txt")
 display_finite_automate(fa)
-fa.is_standard()
 
