@@ -14,11 +14,11 @@ class State:
         
 class Transition:
     def __init__(self, state1, state2, word):
-        self.state1 = state1
-        self.state2 = state2
+        self.from_state = state1
+        self.to_state = state2
         self.word = word
     def __repr__(self): 
-        return f"Transition({self.state1}->{self.word}->{self.state2})"
+        return f"Transition({self.from_state}->{self.word}->{self.to_state})"
 
         
 
@@ -45,7 +45,26 @@ class FiniteAutomate:
             if word.word == word_name:
                 return word
         return None
+    
+    def is_standard(self) -> bool:
+        if len(self.initial_states) == 1:
+            # Check if no transition is going to initial state
+            initial_state = self.initial_states[0]
+            status = True
+            for transition in self.transitions:
+                if transition.to_state is initial_state : # Warning use is function to compare same object in memory
+                    return False
+            return True
+        else:
+            return False
+        
+    # TODO : à implémenter
+    def is_deterministic(self) -> bool:
+        return True
 
+    # TODO : à implémenter
+    def is_complete(self) -> bool:
+        return True
     
     def add_word(self, word):
         self.words.append(word)
@@ -87,7 +106,7 @@ class FiniteAutomate:
             
             for _ in range(num_transitions):
                 text = file.readline().strip()
-                parts = re.split(r'(\d+)([a-zA-Z])(\d+)', text)
+                parts = re.split(r'(\d+)([a-zA-Z])(\d+)', text) # use regex to separate items
                 # Remove any empty strings from the list which can occur due to how re.split() includes results
                 parts = [part for part in parts if part]
                 source_state = parts[0]
@@ -117,8 +136,13 @@ def display_finite_automate_amandine(fa):
     print("States:", fa.states)
 
 
+def completion(FA):
+    return
+
 
 fa = FiniteAutomate("Test")
-fa.read_from_file("Inputs/Int3-2-20.txt")
+#fa.read_from_file("Inputs/Int3-2-20.txt")
+fa.read_from_file("Inputs/Int3-2-4.txt")
 display_finite_automate(fa)
+fa.is_standard()
 
