@@ -139,6 +139,9 @@ def display_finite_automate_amandine(fa):
 def completion(FA):
     return
 
+#
+#
+#
 
 fa = FiniteAutomate("Test")
 #fa.read_from_file("Inputs/Int3-2-20.txt")
