@@ -1,4 +1,3 @@
-
 class Alphabet:
     def __init__(self, word):
         self.word = word 
@@ -86,11 +85,31 @@ def display_finite_automate_amandine(fa):
     print("States:", fa.states)
 
 
-def completion(FA):
-    return
-
 
 fa = FiniteAutomate("Test")
-fa.read_from_file("Inputs/Int3-2-3.txt")
-display_finite_automate(fa)
+#fa.read_from_file("Inputs/Int3-2-3.txt")
+#display_finite_automate(fa)
 
+fa.words = ['a' , 'b']
+
+def display_table(FA):
+    """
+    Display a table of elements in the list.
+
+    Parameters:
+    elements (list): The list of elements to display.
+    """
+    for index, word in enumerate(FA.words):
+        if index > 0:  # Skip printing the separator for the first element
+            print(' / ', end='')
+        print(word, end='')
+
+
+    #print("Index\tElement")
+    #print("----------------")
+    #for index, element in enumerate(elements):
+        #print(f"{index}\t{element}")
+
+# Example usage
+my_list = ['apple', 'banana', 'orange', 'kiwi']
+display_table(fa)
