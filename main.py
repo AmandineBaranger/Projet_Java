@@ -33,9 +33,9 @@ class FiniteAutomate:
     def add_state(self, state):
         self.states.append(state)
     
-    def get_state_from(self, chr):
+    def get_state_from(self, state_name):
         for state in self.states:
-            if state.name == name:
+            if state.name == state_name:
                 return state
         return None
 
@@ -62,8 +62,8 @@ class FiniteAutomate:
             initial_states_info = file.readline().strip().split()
             num_initial_states = int(initial_states_info[0])
             initial_states = set(initial_states_info[1:num_initial_states + 1])
-            for chr in initial_states :
-                self.initial_states.append(self.get_state_from(chr))    
+            for state_name in initial_states :
+                self.initial_states.append(self.get_state_from(state_name))    
             print(initial_states)
                 
             
