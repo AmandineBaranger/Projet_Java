@@ -1,5 +1,10 @@
 
-
+class Alphabet:
+    def __init__(self, word):
+        self.word = word 
+    def __repr__(self):
+        return f"Word({self.word})"
+        
 class State:
     def __init__(self, name):
         self.name = name 
@@ -7,11 +12,11 @@ class State:
         return f"State({self.name})"
         
 class Transition:
-    def __init__(self, state1, state2):
+    def __init__(self, state1, state2, word):
         self.state1 = state1
         self.state2 = state2
-        
-    def __repr__(self):
+        self.word = word
+    def __repr__(self): 
         return f"Transition(\n   state={self.state1},\n   to state={self.state2})"
 
         
@@ -19,28 +24,70 @@ class Transition:
 class FiniteAutomate:
     def __init__(self,name):
         self.name = name 
+        self.words = []
         self.states = []
-        self.transition = []
+        self.transitions = []
         self.initial_states = []
+        self.final_states = []
         
     def add_state(self, state):
         self.states.append(state)
+    
+    def get_state_from(self, chr):
+        for state in self.states:
+            if state.name == name:
+                return state
+        return None
+
+    
+    def add_word(self, word):
+        self.words.append(word)
         
-        
+    def read_from_file(self,filename):
+        with open(filename, 'r') as file:
+
+            # Read and generate words
+            num_words = int(file.readline().strip())
+            for i in range (num_words):
+                new_word = Alphabet(chr(i + 97))
+                self.add_word(new_word)
+
+            # Read and generate the states                            
+            num_states = int(file.readline().strip())
+            for i in range (num_states):
+                new_state = State(f'{i}')
+                self.add_state(new_state)
+            
+            # Read initial states
+            initial_states_info = file.readline().strip().split()
+            num_initial_states = int(initial_states_info[0])
+            initial_states = set(initial_states_info[1:num_initial_states + 1])
+            for chr in initial_states :
+                self.initial_states.append(self.get_state_from(chr))    
+            print(initial_states)
+                
+            
+       
+    
     def __repr__(self):
-        return f"FA(\n   name={self.name},\n   states={self.states},\n   initial_states={self.initial_states})"
-
-state1 = State("q0")
-state2 = State("q1")
-trans1 = Transition(state1,state2)
-trans2 = Transition(state2,state1)
-
-FA = FiniteAutomate("test")
-FA.add_state(state1)
+        return f"FA(\n   name={self.name},\n   words={self.words},\n   states={self.states},\n   initial_states={self.initial_states})"
 
 
-print(test)
-print(trans1)
-print(trans2)
-print(FA)
+def display_finite_automate(fa):
+    print("Finite Automate name:", fa.name)
+    print("Alphabet:", fa.words)
+    print("States:", fa.states)
+    
+
+
+def display_finite_automate_amandine(fa):
+    print("Finite Automate name:", fa.name)
+    print("Alphabet:", fa.words)
+    print("States:", fa.states)
+
+
+
+fa = FiniteAutomate("Test")
+fa.read_from_file("Inputs/Int3-2-3.txt")
+display_finite_automate(fa)
 
