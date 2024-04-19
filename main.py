@@ -47,6 +47,7 @@ class FiniteAutomate:
         return None
     
     def is_standard(self) -> bool:
+        #TODO to complete/modify
         if len(self.initial_states) == 1:
             # Check if no transition is going to initial state
             initial_state = self.initial_states[0]
@@ -120,7 +121,7 @@ class FiniteAutomate:
         return f"FA(\n   name={self.name},\n   words={self.words},\n   states={self.states},\n   initial_states={self.initial_states}),\n   final_states={self.final_states}),\n   transition={self.transitions})"
 
 
-def display_finite_automate(fa):
+"""def display_finite_automate(fa):
     print("Finite Automate name:", fa.name)
     print("Alphabet:", fa.words)
     print("States:", fa.states)
@@ -133,15 +134,29 @@ def display_finite_automate(fa):
 def display_finite_automate_amandine(fa):
     print("Finite Automate name:", fa.name)
     print("Alphabet:", fa.words)
-    print("States:", fa.states)
+    print("States:", fa.states)"""
 
+def diplay_FA(FA):
+    #TODO print the automaton
+
+def standardization(FA) :
+    #TODO return the standardize automaton
 
 def completion(FA):
+    #TODO the completion of the automaton
     return
 
-#
-#
-#
+def determinization_and_completion_automaton (FA) :
+    #TODO return the determinize and complete automaton
+
+def display_complete_dererministic_automaton(CDFA) :
+    #TODO print the CDFA
+
+def minimization(CDFA) :
+    #TODO return the minimized automaton
+
+def display_minimal_automaton(MCDFA) : 
+    #TODO print the MCDFA
 
 fa = FiniteAutomate("Test")
 #fa.read_from_file("Inputs/Int3-2-20.txt")
