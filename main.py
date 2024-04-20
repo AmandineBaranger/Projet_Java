@@ -1,4 +1,6 @@
 import re
+import os
+from enum import Enum
 import tabulate
 from tabulate import tabulate
 
@@ -28,18 +30,50 @@ class State:
     def __repr__(self):
         return f"State({self.name})"
 
+class TransitionType(Enum):
+    STANDARD = 1
+    LOOP = 2
+    EPSILON = 3
 
 ####################################################
 # Transision Class
 ####################################################
 class Transition:
-    def __init__(self, state1, state2, word):
-        self.from_state = state1
-        self.to_state = state2
-        self.word = word
+    def __init__(self, from_state, to_state, word):
+        self.from_state = from_state
+        self.to_state = to_state
+        if word=='ε':
+            #@print("Epsilon")
+            self.type = TransitionType.EPSILON
+            self.word = None
+        elif from_state is to_state:
+            #print("Loop")
+            self.type = TransitionType.LOOP
+            self.word = word
+        else:
+            #print("Standard")
+            self.type = TransitionType.STANDARD
+            self.word = word
+            
+    def is_loop(self) -> bool:
+        if self.type == TransitionType.LOOP:
+            return True
+        return False
+    
+    def is_standard(self) -> bool:
+        if self.type == TransitionType.STANDARD:
+            return True
+        return False
+    
+    def is_epsilon(self) -> bool:
+        if self.type == TransitionType.EPSILON:
+            return True
+        return False
 
     def __repr__(self):
-        return f"Transition({self.from_state}->{self.word}->{self.to_state})"
+        return f"Transition({self.type} : {self.from_state}->{self.word}->{self.to_state})"
+    
+
 
 
 ####################################################
@@ -138,6 +172,12 @@ class FiniteAutomate:
                 if not transition_found:
                     return False
         return True
+    
+    def has_epsilon_transitions(self) -> bool:
+        for transition in self.transitions:
+            if transition.type == TransitionType.EPSILON:
+                return True
+        return False
 
     def add_word(self, word):
         """Add a word to the alphabet."""
@@ -182,20 +222,30 @@ class FiniteAutomate:
             for _ in range(num_transitions):
                 text = file.readline().strip()
                 parts = re.split(
-                    r"(\d+)([a-zA-Z])(\d+)", text
-                )  # use regex to separate items
+                    r"(\d+)([a-zε])(\d+)", text
+                )  # use regex to separate items 
                 # Remove any empty strings from the list which can occur due to how re.split() includes results
+                # ε for empty word
                 parts = [part for part in parts if part]
                 source_state = parts[0]
-                word = parts[1]
+                word = parts[1] #
+                print(word)
                 ending_state = parts[2]
-                self.transitions.append(
-                    Transition(
-                        self.get_state_from_name(source_state),
-                        self.get_state_from_name(ending_state),
-                        self.get_word_from(word),
-                    )
-                )
+                if word != "ε":
+                    self.transitions.append(
+                        Transition(
+                            self.get_state_from_name(source_state),
+                            self.get_state_from_name(ending_state),
+                            self.get_word_from(word),
+                        ))
+                        
+                else: # mange the epsilon transaction
+                    self.transitions.append(
+                        Transition(
+                            self.get_state_from_name(source_state),
+                            self.get_state_from_name(ending_state),
+                            "ε",
+                        ))
                 # print(f"Transistion {source_state}-{word}-{ending_state}")
 
     # Display the automaton
@@ -206,6 +256,13 @@ class FiniteAutomate:
 ####################################################
 # Functions definitions
 ####################################################
+
+####################################################
+# Function to list files in a directory
+####################################################
+
+def list_files(directory):
+    return [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
 
 
 ####################################################
@@ -218,6 +275,9 @@ def display_FA(fa):
     header.append(" ")
     for word in fa.alphabet:
         header.append(word.word)
+        
+    if fa.has_epsilon_transitions():
+        header.append("ε")
 
     table = [header]
 
@@ -234,16 +294,30 @@ def display_FA(fa):
 
         for _ in range(len(fa.alphabet)):
             row.append("--")
+        if fa.has_epsilon_transitions():
+            row.append("--")
         table.append(row)
 
+    last_column_index = len(fa.alphabet) + 2
+    
     for transition in fa.transitions:
-        source = int(transition.from_state.name) + 1
-        dest = int(transition.to_state.name)
-        word = ord(transition.word.word) - 95
-        if table[source][word] == "--":
-            table[source][word] = dest
-        else:
-            table[source][word] = f"{table[source][word]},{dest}"
+        if transition.is_standard() or transition.is_loop() :
+            #print(transition)
+            source = int(transition.from_state.name) + 1
+            dest = int(transition.to_state.name)
+            word = ord(transition.word.word) - 95
+            if table[source][word] == "--":
+                table[source][word] = dest
+            else:
+                table[source][word] = f"{table[source][word]},{dest}"
+        else: # Case for Epsilon
+            source = int(transition.from_state.name) + 1
+            dest = int(transition.to_state.name)
+            if table[source][last_column_index] == "--":
+                table[source][last_column_index] = dest
+            else:
+                table[source][last_column_index] = f"{table[source][last_column_index]},{dest}"
+        
     print(tabulate(table, tablefmt="simple_grid"))
 
 
@@ -252,12 +326,28 @@ def display_FA(fa):
 ####################################################
 
 
+"""directory = 'Inputs/'
+files = list_files(directory)
+#print(files)
+
+automata = []
+
+for file in files:
+    automaton = FiniteAutomate(file)
+    path = f"{directory}{file}"
+    print("-->"+path)
+    automaton.read_from_file(f"{directory}{file}")
+    display_FA(automaton)
+    automata.append(automaton)"""
+
+#print(automata)
+
 # Create the FiniteAutomate object and read data from file
 fa = FiniteAutomate("Test")
-fa.read_from_file("Inputs/Int3-2-17.txt")
+fa.read_from_file("Inputs/Int3-2-33.txt")
 
 # Display the automaton
-display_FA(fa)
+test = display_FA(fa)
 
 if fa.is_standard():
     print("The automaton is standard")
