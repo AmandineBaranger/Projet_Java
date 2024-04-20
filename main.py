@@ -144,17 +144,17 @@ class FiniteAutomate:
 
     def is_deterministic(self) -> bool:
         """Check if the automaton is deterministic."""
-        # Verifies for each state and each symbols of the alphabet
+        # Check for multiple initial states
+        if len(self.initial_states) > 1:
+            return False
+        # Verifies for each state and each symbol of the alphabet
         for state in self.states:
             for word in self.alphabet:
-                # Count the number of transitions for the current state and the current alphabet
-                transitions_count = sum(
-                    1
-                    for transition in self.transitions
-                    if transition.from_state == state and transition.word == word
-                )
-                # If the number of transitions is greater than 1, then this automaton is not deterministic
-                if transitions_count > 1:
+                # Collect all transitions for the current state and symbol
+                transitions = [transition for transition in self.transitions if
+                               transition.from_state == state and transition.word == word]
+                # If there are more than one transition, the automaton is not deterministic
+                if len(transitions) > 1:
                     return False
         return True
 
@@ -283,10 +283,14 @@ def display_FA(fa):
 
     for state in fa.states:
         row = []
-        if fa.is_in_inital_states(state):
-            row.append("->")
+        if fa.is_in_inital_states(state) and fa.is_in_final_states(state):
+            row.append("<->")        
+        
         elif fa.is_in_final_states(state):
             row.append("<-")
+            
+        elif fa.is_in_inital_states(state):
+            row.append("->")
         else:
             row.append(" ")
 
@@ -344,7 +348,7 @@ for file in files:
 
 # Create the FiniteAutomate object and read data from file
 fa = FiniteAutomate("Test")
-fa.read_from_file("Inputs/Int3-2-33.txt")
+fa.read_from_file("Inputs/Int3-2-2.txt")
 
 # Display the automaton
 test = display_FA(fa)
