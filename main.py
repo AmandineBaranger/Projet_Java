@@ -204,7 +204,8 @@ for state in fa.states:
     row.append(state.name)
     row.append("--")
     row.append("--")
-    row.append("--")       
+    row.append("--")    
+    row.append("--")    
     table.append(row)
         
 #table = [header]
