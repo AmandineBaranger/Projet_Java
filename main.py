@@ -1,5 +1,7 @@
 import re
 import tabulate
+from tabulate import tabulate
+
 class Alphabet:
     def __init__(self, word):
         self.word = word 
@@ -21,7 +23,6 @@ class Transition:
         return f"Transition({self.from_state}->{self.word}->{self.to_state})"
 
         
-
 class FiniteAutomate:
     def __init__(self,name):
         self.name = name 
@@ -39,6 +40,18 @@ class FiniteAutomate:
             if state.name == state_name:
                 return state
         return None
+    
+    def is_in_inital_states(self, state_name) -> bool:
+        for state in self.initial_states:
+            if state is state_name:
+                return True
+        return False
+    
+    def is_in_final_states(self, state_name) -> bool:
+        for state in self.final_states:
+            if state is state_name:
+                return True
+        return False
     
     def get_word_from(self, word_name):
         for word in self.words:
@@ -137,31 +150,37 @@ def display_finite_automate_amandine(fa):
     print("States:", fa.states)"""
 
 def diplay_FA(FA):
+    return None
     #TODO print the automaton
 
 def standardization(FA) :
+    return None
     #TODO return the standardize automaton
 
 def completion(FA):
     #TODO the completion of the automaton
-    return
+    return None
 
 def determinization_and_completion_automaton (FA) :
     #TODO return the determinize and complete automaton
+    return None
 
 def display_complete_dererministic_automaton(CDFA) :
     #TODO print the CDFA
+    return None
 
 def minimization(CDFA) :
     #TODO return the minimized automaton
+    return None
 
 def display_minimal_automaton(MCDFA) : 
     #TODO print the MCDFA
+    return None
 
 fa = FiniteAutomate("Test")
-#fa.read_from_file("Inputs/Int3-2-20.txt")
-fa.read_from_file("Inputs/Int3-2-4.txt")
-display_finite_automate(fa)
+fa.read_from_file("Inputs/Int3-2-20.txt")
+#fa.read_from_file("Inputs/Int3-2-4.txt")
+#display_finite_automate(fa)
 fa.is_standard()
 
 # first row of table
