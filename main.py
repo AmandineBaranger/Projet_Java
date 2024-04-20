@@ -66,6 +66,8 @@ class FiniteAutomate:
     
     def get_word_from(self, word_name):
         """Get a word from its name."""
+        if not isinstance(word_name, str):
+            raise TypeError('Error: must be a string')
         for word in self.alphabet:
             if word.word == word_name:
                 return word
@@ -204,7 +206,7 @@ def display_FA (fa):
 
 # Create the FiniteAutomate object and read data from file
 fa = FiniteAutomate("Test")
-fa.read_from_file("Inputs/Int3-2-3.txt")
+fa.read_from_file("Inputs/Int3-2-17.txt")
 
 # Display the automaton
 display_FA(fa)
