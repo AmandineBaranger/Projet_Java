@@ -4,18 +4,29 @@ from tabulate import tabulate
 #from pydantic import BaseModel
 
 # Define classes for Alphabet, State, and Transition
+
+####################################################
+# Alphabet Class
+####################################################
 class Alphabet:
     def __init__(self, word):
         self.word = word 
     def __repr__(self):
         return f"Word({self.word})"
         
+####################################################
+# State Class
+####################################################
 class State:
     def __init__(self, name):
         self.name = name 
     def __repr__(self):
         return f"State({self.name})"
         
+
+####################################################
+# Transision Class
+####################################################
 class Transition:
     def __init__(self, state1, state2, word):
         self.from_state = state1
@@ -24,7 +35,9 @@ class Transition:
     def __repr__(self): 
         return f"Transition({self.from_state}->{self.word}->{self.to_state})"
 
+####################################################
 # Define class for FiniteAutomaton
+####################################################
 class FiniteAutomate:
     def __init__(self,name):
         self.name = name 
@@ -166,8 +179,13 @@ class FiniteAutomate:
     def __repr__(self):
         return f"FA(\n   name={self.name},\n   alphabet={self.alphabet},\n   states={self.states},\n   initial_states={self.initial_states}),\n   final_states={self.final_states}),\n   transition={self.transitions})"
 
+####################################################
+# Functions definitions
+####################################################
 
+####################################################
 # Function to display the automaton
+####################################################
 def display_FA (fa):
     """Display the automaton."""
     header = []
@@ -202,6 +220,12 @@ def display_FA (fa):
         else:
             table[source][word]=f"{table[source][word]},{dest}"
     print(tabulate(table, tablefmt="simple_grid"))
+
+
+
+####################################################
+# Testing
+####################################################
 
 
 # Create the FiniteAutomate object and read data from file
