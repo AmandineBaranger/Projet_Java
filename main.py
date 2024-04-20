@@ -88,9 +88,35 @@ class FiniteAutomate:
         self.initial_states = []
         self.final_states = []
 
+    def add_word(self, word):
+        """Add a word to the alphabet."""
+        if not isinstance(word, Alphabet):
+            raise TypeError("Error: must be an Alphabet")
+        self.alphabet.append(word)
+        
     def add_state(self, state):
         """Add a state to the automaton."""
+        if not isinstance(state, State):
+            raise TypeError("Error: must be a State")
         self.states.append(state)
+    
+    def add_transition(self, transition):
+        """Add a state to the automaton."""
+        if not isinstance(transition, Transition):
+            raise TypeError("Error: must be a Transition")
+        self.transitions.append(transition)
+        
+    def add_initial_state(self, state):
+        """Add a state to the initial state."""
+        if not isinstance(state, State):
+            raise TypeError("Error: must be a State")
+        self.initial_states.append(state)
+        
+    def add_final_state(self, state):
+        """Add a state to the initial state."""
+        if not isinstance(state, State):
+            raise TypeError("Error: must be a State")
+        self.final_states.append(state)
 
     def get_state_from_name(self, state_name):
         """Get a state from its name."""
@@ -126,6 +152,20 @@ class FiniteAutomate:
             if word.word == word_name:
                 return word
         return None
+
+    ################################################################################
+    # WARNING : Duplicate function keep the link on object - Must be rewrite
+    ################################################################################
+
+    def duplicate(self):
+        duplicate_instance = FiniteAutomate(self.name)
+        duplicate_instance.alphabet = [Alphabet(word.word) for word in self.alphabet]
+        duplicate_instance.states = self.states.copy()
+        duplicate_instance.transitions = self.transitions.copy()
+        duplicate_instance.initial_states = self.initial_states.copy()
+        duplicate_instance.final_states = self.final_states.copy()
+        return duplicate_instance
+
 
     def is_standard(self) -> bool:
         """Check if the automaton is in standard form."""
@@ -179,10 +219,6 @@ class FiniteAutomate:
                 return True
         return False
 
-    def add_word(self, word):
-        """Add a word to the alphabet."""
-        self.alphabet.append(word)
-
     def read_from_file(self, filename):
         """Read data from a file and initialize the automaton."""
         with open(filename, "r") as file:
@@ -204,7 +240,7 @@ class FiniteAutomate:
             num_initial_states = int(initial_states_info[0])
             initial_states = set(initial_states_info[1 : num_initial_states + 1])
             for state_name in initial_states:
-                self.initial_states.append(self.get_state_from_name(state_name))
+                self.add_initial_state(self.get_state_from_name(state_name))
             # print(initial_states)
 
             # Read final states
@@ -212,7 +248,7 @@ class FiniteAutomate:
             num_final_states = int(final_states_info[0])
             final_states = set(final_states_info[1 : num_final_states + 1])
             for state_name in final_states:
-                self.final_states.append(self.get_state_from_name(state_name))
+                self.add_final_state(self.get_state_from_name(state_name))
             # print(final_states)
 
             # Read transitions
@@ -232,7 +268,7 @@ class FiniteAutomate:
                 print(word)
                 ending_state = parts[2]
                 if word != "ε":
-                    self.transitions.append(
+                    self.add_transition(
                         Transition(
                             self.get_state_from_name(source_state),
                             self.get_state_from_name(ending_state),
@@ -240,7 +276,7 @@ class FiniteAutomate:
                         ))
                         
                 else: # mange the epsilon transaction
-                    self.transitions.append(
+                    self.add_transition(
                         Transition(
                             self.get_state_from_name(source_state),
                             self.get_state_from_name(ending_state),
