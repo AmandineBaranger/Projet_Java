@@ -55,10 +55,12 @@ class FiniteAutomate:
                 return True
         return False
     
-    def is_in_final_states(self, state_name) -> bool:
+    def is_in_final_states(self, final_state) -> bool:
         """Check if a state is a final state."""
+        if not isinstance(final_state, State):
+            raise TypeError('Error: must be a State')
         for state in self.final_states:
-            if state is state_name:
+            if state is final_state:
                 return True
         return False
     
@@ -197,7 +199,7 @@ def display_FA (fa):
             table[source][word]=dest
         else:
             table[source][word]=f"{table[source][word]},{dest}"
-    print(tabulate(table, tablefmt="grid"))
+    print(tabulate(table, tablefmt="simple_grid"))
 
 
 # Create the FiniteAutomate object and read data from file
