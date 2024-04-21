@@ -393,7 +393,7 @@ for file in files:
 
 # Create the FiniteAutomate object and read data from file
 fa = FiniteAutomate("Test")
-fa.read_from_file("Inputs/Int3-2-2.txt")
+fa.read_from_file("Inputs/Int3-2-34.txt")
 
 # Display the automaton
 test = display_FA(fa)
@@ -409,6 +409,6 @@ else:
     print("The automaton is not complete")
 
 if fa.is_deterministic():
-    print("The automaton is not deterministic")
-else:
     print("The automaton is deterministic")
+else:
+    print("The automaton is not deterministic")
